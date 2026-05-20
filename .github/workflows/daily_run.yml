@@ -2,7 +2,7 @@ name: EGNN Daily Inference
 
 on:
   schedule:
-    - cron: "45 21 * * 1-5"
+    - cron: "45 23 * * 1-5"
   workflow_dispatch:
     inputs:
       universe:
