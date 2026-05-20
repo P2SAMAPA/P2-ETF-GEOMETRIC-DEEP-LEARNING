@@ -162,7 +162,7 @@ with tab1:
                 f"Score: `{fmt(s)}`\n\n"
                 f"Rank: `{row.get('rank',i+1)}`\n\n"
                 f'<span style="background:{sc(s)};color:white;padding:2px 8px;'
-                f'border-radius:8px;font-size:11px">#{row.get(\"rank\",i+1)}</span>',
+                f'border-radius:8px;font-size:11px">#{row.get("rank",i+1)}</span>',
                 unsafe_allow_html=True)
 
 with tab2:
