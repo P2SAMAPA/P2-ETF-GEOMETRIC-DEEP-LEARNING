@@ -1,0 +1,36 @@
+name: EGNN Training (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      universe:
+        description: "Universe (ALL / EQUITY_SECTORS / FI_COMMODITIES / COMBINED)"
+        required: false
+        default: "ALL"
+      epochs:
+        description: "Training epochs (default: 100)"
+        required: false
+        default: "100"
+
+jobs:
+  train-egnn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      matrix:
+        universe: [EQUITY_SECTORS, FI_COMMODITIES, COMBINED]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Train EGNN — ${{ matrix.universe }}
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python trainer_model.py \
+            --universe ${{ matrix.universe }} \
+            --epochs   ${{ github.event.inputs.epochs || '100' }}

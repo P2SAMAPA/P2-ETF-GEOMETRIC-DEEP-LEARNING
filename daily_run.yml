@@ -1,0 +1,32 @@
+name: EGNN Daily Inference
+
+on:
+  schedule:
+    - cron: "45 21 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      universe:
+        description: "Universe (ALL / EQUITY_SECTORS / FI_COMMODITIES / COMBINED)"
+        required: false
+        default: "ALL"
+
+jobs:
+  daily-egnn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        universe: [EQUITY_SECTORS, FI_COMMODITIES, COMBINED]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Run EGNN inference — ${{ matrix.universe }}
+        env:
+          HF_TOKEN:      ${{ secrets.HF_TOKEN }}
+          EGNN_UNIVERSE: ${{ matrix.universe }}
+        run: python trainer.py
